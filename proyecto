@@ -1,0 +1,179 @@
+#include <iostream>
+#include <stdlib.h>
+#include <time.h>
+#include <vector>
+#include <fstream>
+using namespace std;
+
+struct perfil{
+    string user, contrasena;
+    vector<string> compras;
+    double saldo;
+};
+
+struct juego{
+    string nombre;
+    vector<string> categoriapreferida;
+    string descripcion;
+    double precio, key;
+    struct valorar;
+    struct unidadjuego;
+
+};
+
+struct tienda{
+    vector<juego> catalogo;
+};
+
+struct valorar{
+    int megusta;
+    int nomegusta;
+};
+
+struct unidadjuego{
+    double key;
+    int stockdispo;
+    bool stock;
+};
+
+void existecuentausuario(perfil& cuenta, vector<perfil> guardarcuentas, bool& verificar){
+    cout<<"introduce el usuario: " <<endl;
+    cin>>cuenta.user;
+    cout<<"introduce la contrasena: " <<endl;
+    cin>>cuenta.contrasena;
+    for(int i=0; i<guardarcuentas.size(); i++){
+        if(guardarcuentas[i].user==cuenta.user and guardarcuentas[i].contrasena==cuenta.contrasena){
+            verificar=true;
+        }
+    }
+    cout<<"---------------------------------------------------" <<endl;
+}
+
+void menuUsuarionoExist(int& elegir){
+    cout<<"el usuario o la contrasena no existe." <<endl;
+    cout<<"1. volver a probar." <<endl;
+    cout<<"2. crear cuenta. ";
+    cin>>elegir;
+    cout<<endl <<"----------------------------------------------------" <<endl;
+}
+
+void crearNuevoUsuario(perfil& nuevo, vector<perfil>& guardarcuentas, perfil login, bool verificar){
+    cout<<endl <<"Introduce la nueva identificacion, porfavor: " <<endl;
+    cout<<"introduce un nuevo usuario: ";
+    cin>>nuevo.user;
+    cout<<"introduce una nueva contrasena: ";
+    cin>>nuevo.contrasena;
+    guardarcuentas.push_back(nuevo);
+    guardarcuentas.push_back(nuevo);
+    cout<<endl <<"----------------------------------------------------" <<endl;
+}
+
+void MenuPrincipal(int elegir, vector<perfil> categoriadeljuego, string& categoria ){//cuenta, categoria de juegos, buscar juego, preferencias usuario, salir.
+    cout<<"1. Cuenta" <<endl;
+    cout<<"2. Categorias preferidas" <<endl;
+    cout<<"3. Buscar juegos en la tienda" <<endl;
+    cout<<"4. juegos segun categoria" <<endl;
+    cout<<"5. Salir" <<endl;
+    cin>>elegir;
+    cout<<"------------------------------------------------";
+    //if(elegir==1) //menu cuenta;
+    //if(elegir==2) //menu categorias preferidas
+    //if(elegir==3) categoriaJuegos(guardarcuentas, categoria, elegir);
+    //if(elegir==4) //menu categoria de juegos.
+    //else{return 0;}
+
+}
+
+void categoriaJuegos(vector<perfil> categoriadeljuego, string& categoria, int& elegir){
+    int x=1;
+    ifstream categoriabazar("categorias.txt");
+    cout<<endl <<"Categorias: "<<endl <<endl;
+    while(categoriabazar>>categoria){
+       cout<<x <<". " <<categoria <<endl;
+       x++;
+    }
+    cin>>elegir;
+    cout<<"------------------------------------------------";
+}
+//void dineroUsuario(perfil& x); //dinero disponible de una cuenta y restarlo cuando se compre un juego.
+//void preferenciaUsuario(perfil& x); //mode de las categorias de los juegos que ha comprado.
+////void juegosUsuario(perfi& x); //juegos que ha adquirido el usuario.
+//
+// void juegosusuario(vector <string> compras){
+//    cout<<"------------------------------------------" <<endl;
+//    cout<<"Lista de juegos comprados con esta cuenta: ";
+//    for(int i=0; i<compras.size(); i++){
+//        cout<<compras[i] <<endl;
+//    }
+// }
+//
+//void categoriaJuegos(tienda& x); //juegos que hay en cada categoria.
+//void infoJuego(tienda& x); //informacion relacionada con el juego (precio, descripcion, stock, valoracion).
+//void comprarJuego(tienda& x, perfil& x); //restar stock, mostrar key, restar dinero usuario, añadir a compras, añadir categoria en moda.
+//void valorarJuego(tienda& x, perfil& x);
+////void generarKey(tienda& x);
+//
+//int key(int x){
+//    x=1000000000+rand()%(9999999999-1000000000);
+//    return x;
+//
+//}
+//
+//int comprobarkey(int x, bool repeticion){
+//    vector<int> check(10);
+//    for(int i=0; i<10; i++){
+//        check[i]=key(x);
+//    }
+//    while(c<10){
+//        for(int i=0; i<10; i++){
+//            if(check[c]==check[i+1]) repeticion=true;
+//        }
+//        c++;
+//    }
+//    return repeticion;
+//}
+//
+//void generarkey(){
+//    int x;
+//    bool repeticion=false;
+//    vector <int> juegos(10);
+//    srand(time(NULL));
+//    for(int i=0; i<10; i++){
+//        juegos[i]=key(x);
+//        cout<<juegos[i] <<endl;
+//    }
+//}
+//
+//void menu1(); //cuenta, categoria de juegos, buscar juego, preferencias usuario, salir.
+//void menu11(); //mostrar categorias de juegos, menu1.
+//void menu13(); //mostrar fondos disponibles, añadir fondos, juegos comprados, eliminar cuenta, modificar cuenta, menu1.
+//void menu14(); //mostrar preferencias del usuario, menu1.
+//void menu15(); //mostrar que quieres modificar de la cuenta.
+
+int main(){
+    perfil login;
+    vector<perfil> guardarcuentas;
+    bool verificar=false;
+    int elegir;
+    string categoria;
+//CREAR CUENTA ADMIN.
+    perfil admin;
+    admin.user= "admin";
+    admin.contrasena= "admin";
+    guardarcuentas.push_back(admin);
+//////////////////////
+    existecuentausuario(login, guardarcuentas, verificar);
+    while(verificar==false){
+        menuUsuarionoExist(elegir);
+        if(elegir==1)existecuentausuario(login, guardarcuentas, verificar);
+        if(elegir==2){
+            crearNuevoUsuario(login, guardarcuentas, login, verificar);
+            existecuentausuario(login, guardarcuentas, verificar);
+        }
+    }
+    cout<<"Bienvenido, " <<login.user <<": " <<endl;
+    MenuPrincipal(elegir, guardarcuentas, categoria);
+   // categoriaJuegos(guardarcuentas, categoria, elegir);
+}
+
+
