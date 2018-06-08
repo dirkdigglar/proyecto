@@ -5,36 +5,40 @@
 #include <fstream>
 using namespace std;
 
-struct perfil{
-    string user, contrasena;
-    vector<string> compras;
-    double saldo;
-};
-
 struct juego{
     string nombre;
-    vector<string> categoriapreferida;
+    vector<string> categoria;
     string descripcion;
-    double precio, key;
-    struct valorar;
-    struct unidadjuego;
+    double precio;
+    int valorar_gusta;
+    int valorar_no_gusta;
 
+};
+
+struct perfil{
+    string user;
+    string contrasena;
+    vector<juego> compras;
+    vector<int> key;
+    double saldo;
 };
 
 struct tienda{
     vector<juego> catalogo;
 };
 
-struct valorar{
-    int megusta;
-    int nomegusta;
-};
 
-struct unidadjuego{
-    double key;
-    int stockdispo;
-    bool stock;
-};
+int posicionUsuario(perfil login, vector<perfil> guardarcuentas, int indice){ ////BUSCAR POSICION DEL USUARIO EN EL VECTOR
+///////////////////////BUSCAR POSICION DE LA CUENTA;
+    int indice;
+    for(int i=0; i<cuenta.user.size(); i++){
+        if(cuenta[i].user==login.user){
+            indice=i;
+        }
+    }
+
+    return indice;
+}
 
 void existecuentausuario(perfil& cuenta, vector<perfil> guardarcuentas, bool& verificar){
     cout<<"introduce el usuario: " <<endl;
@@ -68,7 +72,7 @@ void crearNuevoUsuario(perfil& nuevo, vector<perfil>& guardarcuentas, perfil log
     cout<<endl <<"----------------------------------------------------" <<endl;
 }
 
-void MenuPrincipal(int elegir, vector<perfil> categoriadeljuego, string& categoria ){//cuenta, categoria de juegos, buscar juego, preferencias usuario, salir.
+void MenuPrincipal(int elegir, string categoria){//cuenta, categoria de juegos, buscar juego, preferencias usuario, salir.
     cout<<"1. Cuenta" <<endl;
     cout<<"2. Categorias preferidas" <<endl;
     cout<<"3. Buscar juegos en la tienda" <<endl;
@@ -78,13 +82,14 @@ void MenuPrincipal(int elegir, vector<perfil> categoriadeljuego, string& categor
     cout<<"------------------------------------------------";
     //if(elegir==1) //menu cuenta;
     //if(elegir==2) //menu categorias preferidas
-    //if(elegir==3) categoriaJuegos(guardarcuentas, categoria, elegir);
+//    if(elegir==3) mostrarCategorias(categoria, elegir);
     //if(elegir==4) //menu categoria de juegos.
     //else{return 0;}
 
 }
 
-void categoriaJuegos(vector<perfil> categoriadeljuego, string& categoria, int& elegir){
+void mostrarCategorias(string& categoria, int& elegir){
+    //////////////////////////////////////SOLO LEE LA LISTA DE CATEGORIAS Y LAS MUESTRA POR PANTALLA.
     int x=1;
     ifstream categoriabazar("categorias.txt");
     cout<<endl <<"Categorias: "<<endl <<endl;
@@ -126,6 +131,133 @@ void prefUsuario(perfil user){
     cout<<"-------------------------------------------";
 }
 
+void key(perfil& keyUnica){
+    ///////////////////////////////GENERAR KEY Y GUARDARLA
+    int x=0;
+    bool repetido=false;
+    int indicekey;
+    while(x==0 or repetido==true){
+        keyUnica.key.push_back(1000000000+rand()%(9999999999-1000000000));
+        indicekey=keyUnica.size();
+        ////////////////////////////BUSCAR SI EXISTE LA KEY.
+        for(int i=1; i<keyUnica.size()-1; i++){
+            if(keyUnica[indicekey].key==keyUnica[i].key){
+                repetido=true;
+                x++;
+            }
+        }
+    }
+}
+
+void MenuModifCuenta(perfil& cambiar, int elegir){
+    cout<<endl;
+    cout<<"1. Cambiar nombre de Usuario" <<endl;
+    cout<<"2. Cambiar contrasena" <<endl;
+    cout<<"3. Eliminar cuenta" <<endl;
+    cout<<"4. Menu Principal" <<endl;
+    cin>>elegir;
+    cout<<"----------------------------------------------";
+
+}
+
+void CambiarUser(perfil& cuenta, perfil login){
+   ///////////////////////BUSCAR POSICION DE LA CUENTA;
+    int indice;
+    string usuario;
+    for(int i=0; i<cuenta.user.size(); i++){
+        if(cuenta[i].user==login.user){
+            indice=i;
+        }
+    }
+
+    cout<<"Introduce el nuevo nombre de usuario: ";
+    cin>>usuario;
+    cuenta[indice].user=usuario;
+    cout<<"El nombre de usuario se ha modificado"; <<endl;
+    cout<<"--------------------------------------------";
+}
+
+void CambiarContra(perfil& cuenta, perfil login){
+    ///////////////////////BUSCAR POSICION DE LA CUENTA;
+    int indice;
+    int password;
+    string contrasena;
+    string contrasena2;
+    bool coincide==false;
+    for(int i=0; i<cuenta.user.size(); i++){
+        if(cuenta[i].user==login.user){
+            indice=i;
+        }
+    }
+    while(coincide==false){
+        cout<<endl <<"Introduce la nueva contrasena: ";
+        cin>>contrasena;
+        cout<<endl <<"Vuelve a introducir la nueva contrasena: ";
+        cin>>contrasena2;
+        if(contrasena==contrasena2){
+            cuenta[indice].contrasena=contrasena2;
+            coincide=true;
+        }else{
+            cout<<"Las contrasenas introducidas no coinciden, prueba otra vez. ";
+        }
+    }
+    cout<<"El nombre de usuario se ha modificado"; <<endl;
+    cout<<"-----------------------------------------------";
+
+}
+
+void MenuBorrarCuenta(int elegir){
+    cout<<endl <<"¿Estas seguro/a que quieres eliminar la cuenta? Si lo haces se eliminarán todos los datos y se cerrará el programa."
+    cout<<endl <<"1. SI y salir del programa ";
+    cout<<endl <<"2. NO, llevame al menu principal ";
+    cin>> elegir;
+    cout<<"---------------------------------------------";
+}
+
+void BorrarCuenta(perfil& cuenta, perfil login){
+    ///////////////////////BUSCAR POSICION DE LA CUENTA;
+    int indice;
+    for(int i=0; i<cuenta.user.size(); i++){
+        if(cuenta[i].user==login.user){
+            indice=i;
+        }
+    }
+    cuenta.user.swap(indice);
+    cout<<endl <<"La cuenta de Usuario se ha eliminado";
+    cout<<endl <<"Adios";
+    return 0;
+
+}
+
+void ValorarJuego(perfil& cuenta, juego& juego, int indice, int elegir){
+    bool segundoclick=false;
+    if(elegir==1){
+        juego[indice].valorar_gusta+=1;
+        segundoclick=true;
+    }
+    if(elegir==2){
+        juego[indice].valorar_no_gusta+=1;
+        segundoclick=true;
+    }
+    if(elegir==1 and segundoclick==true){
+        juego[indice].valorar_gusta-=1;
+    }
+    if(elegir==2 and segundoclick==true){
+        juego[indice].valorar_no_gusta-=1;
+    }
+}
+
+void JuegosComprados(perfil cuenta, int indice, int elegir){
+    cout<<endl <<"LISTA DE JUEGOS COMPRADOS " <<endl;
+    for(int i=0; i<perfil.compras.size(); i++){
+        cout<<i <<". " <<perfil[indice].compras[i] <<endl;
+    }
+    cout<<"-----------------------------------------------";
+    cout<<endl;
+    cout<<"1. Ver informacion juego" <<endl;
+    cout<<"2. Ver key del juego";
+    /////////////ME CAGO EN LA PUTA COMO PUEDO HACER ESTO FÁCIL?????????????
+}
 //void dineroUsuario(perfil& x); //dinero disponible de una cuenta y restarlo cuando se compre un juego.
 //void preferenciaUsuario(perfil& x); //mode de las categorias de los juegos que ha comprado.
 ////void juegosUsuario(perfi& x); //juegos que ha adquirido el usuario.
@@ -144,37 +276,6 @@ void prefUsuario(perfil user){
 //void valorarJuego(tienda& x, perfil& x);
 ////void generarKey(tienda& x);
 //
-//int key(int x){
-//    x=1000000000+rand()%(9999999999-1000000000);
-//    return x;
-//
-//}
-//
-//int comprobarkey(int x, bool repeticion){
-//    vector<int> check(10);
-//    for(int i=0; i<10; i++){
-//        check[i]=key(x);
-//    }
-//    while(c<10){
-//        for(int i=0; i<10; i++){
-//            if(check[c]==check[i+1]) repeticion=true;
-//        }
-//        c++;
-//    }
-//    return repeticion;
-//}
-//
-//void generarkey(){
-//    int x;
-//    bool repeticion=false;
-//    vector <int> juegos(10);
-//    srand(time(NULL));
-//    for(int i=0; i<10; i++){
-//        juegos[i]=key(x);
-//        cout<<juegos[i] <<endl;
-//    }
-//}
-//
 //void menu1(); //cuenta, categoria de juegos, buscar juego, preferencias usuario, salir.
 //void menu11(); //mostrar categorias de juegos, menu1.
 //void menu13(); //mostrar fondos disponibles, añadir fondos, juegos comprados, eliminar cuenta, modificar cuenta, menu1.
@@ -187,6 +288,7 @@ int main(){
     bool verificar=false;
     int elegir;
     string categoria;
+    int indice;
 //CREAR CUENTA ADMIN.
     perfil admin;
     admin.user= "admin";
@@ -202,10 +304,12 @@ int main(){
             existecuentausuario(login, guardarcuentas, verificar);
         }
     }
-    cout<<"Bienvenido, " <<login.user <<": " <<endl;
-    MenuPrincipal(elegir, guardarcuentas, categoria);
-   // categoriaJuegos(guardarcuentas, categoria, elegir);
-   //prefUsuario(login);
+    cout<<"Bienvenido, " <<login.user <<". " <<endl;
+
+    //MenuPrincipal(elegir, categoria);
+    //categoriaJuegos(categoria, elegir);
+    //prefUsuario(login);
+    srand(time(NULL));
 }
 
 
