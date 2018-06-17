@@ -50,6 +50,8 @@ void anadirDinero(vector<perfil> &guardarcuentas, int indice);
 void Mostrarfondos(vector<perfil> guardarcuentas, int indice);
 void buscarJuegos(tienda todosJuegos, int indicejuego, int& elegir,
                   string categoria, vector<perfil> guardarcuentas, int indice);
+void MostrarCompras(vector<perfil> guardarcuentas, tienda todosJuegos, int indice,
+                     int indicejuego, int& elegir, string categoria);
 
 
 
@@ -94,37 +96,52 @@ void crearNuevoUsuario(perfil& nuevo, vector<perfil>& guardarcuentas, perfil log
     cout<<endl <<"----------------------------------------------------" <<endl;
 }
 
-void MenuPrincipal(int elegir, string categoria, vector<perfil> guardarcuentas, int indice, int indicejuego, tienda todosJuegos){//cuenta, categoria de juegos, buscar juego, preferencias usuario, salir.
+void MenuPrincipal(int elegir, string categoria, vector<perfil> guardarcuentas,
+                   int indice, int indicejuego, tienda todosJuegos){//cuenta, categoria de juegos, buscar juego, preferencias usuario, salir.
     cout<<"1. Cuenta" <<endl;
-    cout<<"2. Categorias preferidas" <<endl;
-    cout<<"3. Buscar juegos en la tienda" <<endl;
-    cout<<"4. juegos segun categoria" <<endl;
-    cout<<"5. Salir" <<endl;
+    cout<<"2. Buscar juegos en la tienda" <<endl;
+    cout<<"3. juegos segun categoria" <<endl;
+    cout<<"4. Salir" <<endl;
     cin>>elegir;
     cout<<"--------------------------------------------------";
     if(elegir==1) menuCuenta(elegir, categoria, guardarcuentas, indice, indicejuego, todosJuegos);
-    //if(elegir==2) //menu categorias preferidas
-    if(elegir==3) buscarJuegos(todosJuegos, indicejuego, elegir, categoria, guardarcuentas, indice);
-    if(elegir==4) mostrarCategorias(categoria, elegir);
-    if(elegir==5) ;
+    if(elegir==2) buscarJuegos(todosJuegos, indicejuego, elegir, categoria, guardarcuentas, indice);
+    if(elegir==3) mostrarCategorias(categoria, elegir);
+    if(elegir==4) ;
 
+}
+
+void MostrarCompras(vector<perfil> guardarcuentas, tienda todosJuegos, int indice, int indicejuego, int& elegir, string categoria){
+    for(int i=0; i<guardarcuentas[indice].compras.size(); i++){
+        cout<<guardarcuentas[indice].compras[i].nombre <<endl;
+    }
+    cout<<"1. Menu principal";
+    cin>>elegir;
+    if(elegir==1) MenuPrincipal(elegir, categoria, guardarcuentas, indice, indicejuego, todosJuegos);
 }
 
 void menuCuenta(int& elegir, string categoria, vector<perfil> guardarcuentas, int indice, int indicejuego, tienda todosJuegos) { //Me falta acabarlo pero es simplemente hacer lo mismo llamando otra funciones, lo hare cuando despierte
 	cout<<endl <<"1. Fondos disponibles "<<endl;
 	cout<<"2. Anadir fondos "<<endl;
 	cout<<"3. Juegos adquiridos "<<endl;
-	cout<<"4. Eliminar cuenta "<<endl;
-	cout<<"5. Modificar cuenta "<<endl;
-	cout<<"6. Menu principal "<<endl;
+	cout<<"4. Categorias preferidas " <<endl;
+	cout<<"5. Eliminar cuenta "<<endl;
+	cout<<"6. Modificar cuenta "<<endl;
+	cout<<"7. Menu principal "<<endl;
 	cin>> elegir;
 	if(elegir==1) Mostrarfondos(guardarcuentas, indice);
     if(elegir==2) anadirDinero(guardarcuentas, indice);
-    if(elegir==3);
-    if(elegir==4) MenuBorrarCuenta(elegir);
-    if(elegir==5) MenuModifCuenta(elegir);
-    if(elegir==6) MenuPrincipal(elegir, categoria, guardarcuentas, indice, indicejuego, todosJuegos);
+    if(elegir==3) MostrarCompras(guardarcuentas, todosJuegos, indice, indicejuego, elegir, categoria);
+    if(elegir==4) MostrarCategPreferidas;/////////////////////////////////////////
+    if(elegir==5) MenuBorrarCuenta(elegir);
+    if(elegir==6) MenuModifCuenta(elegir);
+    if(elegir==7) MenuPrincipal(elegir, categoria, guardarcuentas, indice, indicejuego, todosJuegos);
     cout<<"--------------------------------------------------";
+}
+
+void MostrarCategPreferidas(){
+
+
 }
 
 void buscarJuegos(tienda todosJuegos, int indicejuego, int& elegir,
@@ -177,12 +194,6 @@ void Mostrarfondos(vector<perfil> guardarcuentas, int indice){
     cout<<" euros en esta cuenta.";
 
 }
-
-//void MostrarJuegosAdquiridos(vector<juego> guardarcuentas, int indice){
-//    for(int i=0; i<guardarcuentas[indice.compras.size(); i++){
-//        cout<<compras[i] <<endl;
-//    }
-//}
 
 void anadirDinero(vector<perfil> &guardarcuentas, int indice) {
 	int ingreso;
@@ -375,6 +386,3 @@ int main(){
     MenuPrincipal(elegir, categoria, guardarcuentas, indice, indicejuego, game);
     srand(time(NULL));
 }
-
-
-
